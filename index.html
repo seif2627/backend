@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamCanvas AI Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">DreamCanvas</div>
+    <nav class="nav-links">
+      <a href="#generator">Create</a>
+      <a href="#styles">Styles</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="btn btn-primary">Sign In</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <p class="pill">AI image studio • Build anything</p>
+        <h1>Create breathtaking visuals with a single prompt</h1>
+        <p class="subhead">Compose your scene, pick a style, and let DreamCanvas generate production-ready images in seconds.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#generator">Start creating</a>
+          <button class="btn btn-ghost">Watch demo</button>
+        </div>
+        <div class="hero-metrics">
+          <div><strong>1.2M+</strong><span>images rendered</span></div>
+          <div><strong>35+</strong><span>creative styles</span></div>
+          <div><strong>98%</strong><span>user satisfaction</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="floating-card">
+          <div class="chip">Cinematic</div>
+          <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80" alt="Sample AI art">
+          <div class="card-footer">
+            <div>
+              <p class="tiny">Prompt</p>
+              <p class="prompt-text">A neon-lit alleyway in the rain, cinematic lighting</p>
+            </div>
+            <button class="btn btn-ghost">Regenerate</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="generator" id="generator">
+      <div class="section-header">
+        <div>
+          <p class="pill">Prompt lab</p>
+          <h2>Describe your vision</h2>
+          <p class="section-subhead">Provide a prompt, choose a style and size, and we will craft a stunning image. Placeholder generation simulates the full workflow.</p>
+        </div>
+        <div class="presets">
+          <span class="preset" data-prompt="Futuristic cityscape at sunset, glossy neon reflections">Futuristic city</span>
+          <span class="preset" data-prompt="Cozy reading nook with warm light and lush plants">Cozy nook</span>
+          <span class="preset" data-prompt="Surreal floating islands above an ocean of clouds">Floating islands</span>
+          <span class="preset" data-prompt="Product render of sneakers in a minimal studio">Product render</span>
+        </div>
+      </div>
+
+      <form id="create-form" class="form-grid">
+        <label class="field">
+          <span>Prompt</span>
+          <textarea id="prompt" rows="3" placeholder="Describe your scene, subject, mood, and details..."></textarea>
+        </label>
+        <div class="field">
+          <span>Style</span>
+          <div class="chip-row" id="style-options">
+            <button type="button" class="chip chip-selected" data-style="Realistic">Realistic</button>
+            <button type="button" class="chip" data-style="Illustration">Illustration</button>
+            <button type="button" class="chip" data-style="Cinematic">Cinematic</button>
+            <button type="button" class="chip" data-style="3D Render">3D Render</button>
+            <button type="button" class="chip" data-style="Anime">Anime</button>
+            <button type="button" class="chip" data-style="Pixel Art">Pixel Art</button>
+          </div>
+        </div>
+        <div class="field inline">
+          <div>
+            <span>Aspect ratio</span>
+            <select id="ratio">
+              <option value="1:1">1:1 Square</option>
+              <option value="3:4">3:4 Portrait</option>
+              <option value="16:9">16:9 Landscape</option>
+            </select>
+          </div>
+          <div>
+            <span>Resolution</span>
+            <select id="resolution">
+              <option value="1024">1024 px</option>
+              <option value="2048">2048 px</option>
+              <option value="4096">4096 px</option>
+            </select>
+          </div>
+          <div>
+            <span>Seed</span>
+            <input type="number" id="seed" placeholder="Optional" min="1" max="99999">
+          </div>
+        </div>
+        <div class="actions">
+          <div class="toggles">
+            <label class="toggle">
+              <input type="checkbox" id="safe-mode" checked>
+              <span class="slider"></span>
+              <span class="label">Safe-mode</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="upscale">
+              <span class="slider"></span>
+              <span class="label">Auto-upscale</span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary" id="generate-btn">Generate</button>
+        </div>
+      </form>
+
+      <div class="output-panel" id="output-panel">
+        <div class="placeholder" id="placeholder">
+          <p>Generated images will appear here.</p>
+          <p class="tiny">Simulated pipeline with loading state.</p>
+        </div>
+        <div class="result hidden" id="result">
+          <div class="result-image">
+            <div class="status-bar" id="status-bar">
+              <div class="status-fill" id="status-fill"></div>
+            </div>
+            <img id="result-img" alt="Generated artwork">
+            <div class="result-meta">
+              <div>
+                <p class="tiny">Prompt</p>
+                <p id="result-prompt"></p>
+              </div>
+              <div class="meta-tags">
+                <span id="result-style" class="chip chip-soft"></span>
+                <span id="result-ratio" class="chip chip-soft"></span>
+                <span id="result-res" class="chip chip-soft"></span>
+                <span id="result-seed" class="chip chip-soft"></span>
+              </div>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="btn btn-ghost" id="download-btn">Download</button>
+            <button class="btn btn-ghost" id="favorite-btn">Add to favorites</button>
+            <button class="btn btn-primary" id="save-btn">Save to gallery</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="styles" id="styles">
+      <div class="section-header">
+        <div>
+          <p class="pill">Style explorer</p>
+          <h2>Pick a mood, we handle the lighting</h2>
+          <p class="section-subhead">Preview diverse aesthetics you can generate. Every card below is a placeholder preview wired to the style selector.</p>
+        </div>
+        <div class="filter">
+          <label for="filter-input">Search styles</label>
+          <input id="filter-input" type="search" placeholder="Type to filter styles...">
+        </div>
+      </div>
+      <div class="style-grid" id="style-grid"></div>
+    </section>
+
+    <section class="gallery" id="gallery">
+      <div class="section-header">
+        <div>
+          <p class="pill">Library</p>
+          <h2>Your saved creations</h2>
+          <p class="section-subhead">Review, duplicate, or refine previous generations. Saving from the generator will add placeholders here.</p>
+        </div>
+        <div class="gallery-actions">
+          <button class="btn btn-ghost" id="shuffle-btn">Shuffle</button>
+          <button class="btn btn-primary" id="clear-btn">Clear all</button>
+        </div>
+      </div>
+      <div class="masonry" id="gallery-grid"></div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="section-header">
+        <div>
+          <p class="pill">Knowledge base</p>
+          <h2>Frequently asked questions</h2>
+          <p class="section-subhead">Common answers for using DreamCanvas. Content is placeholder but the accordion is interactive.</p>
+        </div>
+      </div>
+      <div class="accordion" id="faq-accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">How does the AI generate images?</button>
+          <div class="accordion-body">Our pipeline interprets your prompt, applies the selected style, and renders in layered passes for detail and accuracy.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">Can I use these images commercially?</button>
+          <div class="accordion-body">Yes, the placeholders simulate licensed outputs ready for commercial use. Replace with your policy details.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">What file formats are supported?</button>
+          <div class="accordion-body">PNG, JPEG, and WEBP are supported exports. Download uses a placeholder data URI for now.</div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">How do I improve image quality?</button>
+          <div class="accordion-body">Experiment with longer prompts, include lighting and camera details, and enable auto-upscale for crisper placeholders.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="logo">DreamCanvas</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+    </div>
+    <p class="tiny">Made with imagination • Placeholder experience ready for integration</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
