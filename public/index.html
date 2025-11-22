@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DreamCanvas | AI Image Creation</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">AI IMAGE STUDIO</p>
+      <h1>Create stunning visuals with text prompts</h1>
+      <p class="lede">Describe the scene, pick a style, and let the generator craft a placeholder image. Perfect for prototyping user flows while your production model is wiring up.</p>
+      <div class="hero__actions">
+        <button class="btn btn-primary" id="startCreating">Start creating</button>
+        <button class="btn btn-secondary" id="viewGallery">View gallery</button>
+      </div>
+      <div class="hero__stats">
+        <div>
+          <p class="stat__number" id="statTotal">0</p>
+          <p class="stat__label">Images generated</p>
+        </div>
+        <div>
+          <p class="stat__number" id="statFavorites">0</p>
+          <p class="stat__label">Favorites saved</p>
+        </div>
+        <div>
+          <p class="stat__number" id="statDownload">0</p>
+          <p class="stat__label">Downloads</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero__preview" id="previewPanel">
+      <div class="preview__glow"></div>
+      <img id="previewImage" src="" alt="Live preview" aria-hidden="true">
+      <div class="preview__details">
+        <p class="label">Live Preview</p>
+        <p class="preview__prompt" id="previewPrompt">Describe your masterpiece to see it appear here.</p>
+        <p class="preview__meta" id="previewMeta">Style: Cinematic · Size: 1:1</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" id="creator">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">CREATE</p>
+          <h2>Generate an image</h2>
+          <p class="lede">Tune the prompt, style, size, and guidance to quickly mock up AI-generated visuals.</p>
+        </div>
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="turboMode">
+            <span class="switch"></span>
+            <span>Turbo sampling</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="safeMode" checked>
+            <span class="switch"></span>
+            <span>Safety filters</span>
+          </label>
+        </div>
+      </div>
+
+      <form id="generateForm" class="form-grid">
+        <div class="form-control full">
+          <label for="prompt">Prompt</label>
+          <textarea id="prompt" rows="3" placeholder="A futuristic skyline at dusk, glass towers reflecting neon lights"></textarea>
+        </div>
+        <div class="form-control">
+          <label for="style">Style</label>
+          <select id="style">
+            <option value="cinematic">Cinematic</option>
+            <option value="illustration">Illustration</option>
+            <option value="analog">Analog film</option>
+            <option value="3d">3D render</option>
+            <option value="pixel">Pixel art</option>
+            <option value="abstract">Abstract</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="size">Size</label>
+          <select id="size">
+            <option value="square">1:1 Square</option>
+            <option value="portrait">3:4 Portrait</option>
+            <option value="landscape">16:9 Landscape</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label for="guidance">Guidance</label>
+          <input type="range" id="guidance" min="0" max="20" value="12">
+          <div class="range-labels">
+            <span>Coarse</span>
+            <span id="guidanceValue">12</span>
+            <span>Precise</span>
+          </div>
+        </div>
+        <div class="form-control">
+          <label for="seed">Seed</label>
+          <input type="number" id="seed" min="0" max="999999" placeholder="Random">
+        </div>
+        <div class="form-control">
+          <label for="palette">Palette</label>
+          <select id="palette">
+            <option value="sunset">Sunset</option>
+            <option value="forest">Forest</option>
+            <option value="ocean">Ocean</option>
+            <option value="mono">Monochrome</option>
+            <option value="candy">Candy pop</option>
+          </select>
+        </div>
+        <div class="form-control full actions">
+          <div class="chips" id="suggestions">
+            <button type="button" class="chip">Cozy reading nook</button>
+            <button type="button" class="chip">Retro arcade room</button>
+            <button type="button" class="chip">Minimalist workspace</button>
+            <button type="button" class="chip">Isometric city park</button>
+          </div>
+          <div class="action-buttons">
+            <button type="button" class="btn" id="randomize">Randomize</button>
+            <button type="submit" class="btn btn-primary" id="generateBtn">Generate</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" id="gallery">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">GALLERY</p>
+          <h2>Recent generations</h2>
+          <p class="lede">Every render is stored locally for this session. Favorite, download, or share with your team.</p>
+        </div>
+        <div class="filters">
+          <button class="chip" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" data-filter="favorite">Favorites</button>
+          <button class="chip" data-filter="landscape">Landscape</button>
+          <button class="chip" data-filter="portrait">Portrait</button>
+          <button class="chip" data-filter="square">Square</button>
+        </div>
+      </div>
+      <div class="empty" id="emptyState">
+        <p>No generations yet. Describe a scene and click Generate to see it here.</p>
+      </div>
+      <div class="grid" id="galleryGrid"></div>
+    </section>
+
+    <section class="panel" id="history">
+      <div class="panel__header">
+        <div>
+          <p class="eyebrow">HISTORY</p>
+          <h2>Prompt log</h2>
+          <p class="lede">Browse every prompt, reuse it, or tweak the text and run a fresh pass.</p>
+        </div>
+        <div class="history-actions">
+          <button class="btn" id="exportLog">Export log</button>
+          <button class="btn btn-secondary" id="clearLog">Clear</button>
+        </div>
+      </div>
+      <ul class="history-list" id="historyList"></ul>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "ai-image-creator",
+  "version": "0.1.0",
+  "description": "Simple AI image creation demo site with placeholder generation.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["ai", "images", "demo"],
+  "author": "",
+  "license": "MIT"
+}
